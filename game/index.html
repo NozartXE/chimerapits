@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<!--
+  CHIMERA PITS — splice a beast, watch it fight, graft it stranger.
+  A pit-fighting game about a beast that is rebuilt after every bout: 36 graftable
+  body parts across 6 slots, 7 tag synergies, 9 wild kinds and the three-phase APEX
+  over a 9-bout card, with a graft draft between bouts, applause prods, 3 stances,
+  3 difficulties, an endless WILD mode, 9 feats, an almanac, and a run history that
+  keeps its losses. Win: clear all 9 bouts. Lose: your beast falls.
+  Tech: one HTML file, classic scripts only, canvas 2D, WebAudio synth, a DOM-free
+  fixed-step simulation that replays identically from a seed in the browser and in
+  Node (the balance bot plays full runs headlessly). No network, no libraries, no
+  external assets — every beast is drawn from its body plan by code.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CHIMERA PITS — splice it, fight it, graft it stranger</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<canvas id="game" width="1280" height="800"></canvas>
+<script src="src/config.js"></script>
+<script src="src/rng.js"></script>
+<script src="src/save.js"></script>
+<script src="src/parts.js"></script>
+<script src="src/beasts.js"></script>
+<script src="src/enemies.js"></script>
+<script src="src/waves.js"></script>
+<script src="src/grafts.js"></script>
+<script src="src/combat.js"></script>
+<script src="src/feats.js"></script>
+<script src="src/sim.js"></script>
+<script src="src/bot.js"></script>
+<script src="src/audio.js"></script>
+<script src="src/input.js"></script>
+<script src="src/titledemo.js"></script>
+<script src="src/testhook.js"></script>
+<script src="src/render/layout.js"></script>
+<script src="src/render/fit.js"></script>
+<script src="src/render/ruleicons.js"></script>
+<script src="src/render/board.js"></script>
+<script src="src/render/beastsview.js"></script>
+<script src="src/render/wildview.js"></script>
+<script src="src/render/fx.js"></script>
+<script src="src/render/hud.js"></script>
+<script src="src/render/banner.js"></script>
+<script src="src/render/title.js"></script>
+<script src="src/render/draftscreen.js"></script>
+<script src="src/render/results.js"></script>
+<script src="src/render/almanac.js"></script>
+<script src="src/render/howto.js"></script>
+<script src="src/main.js"></script>
+</body>
+</html>
