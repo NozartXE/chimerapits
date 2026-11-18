@@ -74,6 +74,7 @@
       this.fighters = []; this.projectiles = []; this.events = [];
       this.time = 0; this.over = false; this.won = false; this.overT = 0;
       this.chain = 0; this.chainT = 0; this.kills = 0; this.damageDealt = 0; this.damageTaken = 0;
+      this.markedId = 0; this.markT = -9; // the player's standing order: which wild beast to hunt
       this.prodCds = { shock: 0, treat: 0, rage: 0 };
       this.player = playerFighter(run, beast);
       this.fighters.push(this.player);
@@ -139,6 +140,7 @@
     kill(dead, killer) {
       if (!dead.alive) return;
       dead.alive = false; dead.hp = 0;
+      if (dead.id === this.markedId) this.markedId = 0;
       this.emit({ t: 'kill', x: dead.x, y: dead.y, name: dead.name, team: dead.team, boss: dead.isBoss });
       if (dead.team === 'wild' && killer && killer.team === 'you') {
         this.kills++;
@@ -153,6 +155,15 @@
       }
       if (dead.team === 'you') { this.over = true; this.won = false; }
       if (this.wildAlive().length === 0 && this.player.alive) { this.over = true; this.won = true; }
+    }
+
+    // The player's hand on the fight: mark a wild beast and your beast hunts
+    // that one until it falls, ignoring nearer prey. Costs nothing but attention.
+    mark(fighter) {
+      if (!fighter || !fighter.alive || fighter.team !== 'wild') return false;
+      this.markedId = fighter.id; this.markT = this.time;
+      this.emit({ t: 'mark', x: fighter.x, y: fighter.y, name: fighter.name });
+      return true;
     }
 
     prod(id) {
@@ -301,12 +312,16 @@
         }
         if (f.stun > 0) { f.stun -= dt; f.vx *= 0.8; f.vy *= 0.8; }
         else {
-          // choose target: nearest living foe
+          // choose target: nearest living foe — unless the player has marked one
           let best = null, bd = 1e9;
           for (const o of this.fighters) {
             if (!o.alive || o.team === f.team) continue;
             const d = Math.hypot(o.x - f.x, o.y - f.y);
             if (d < bd) { bd = d; best = o; }
+          }
+          if (f.team === 'you' && this.markedId) {
+            const m = this.fighters.find((o) => o.id === this.markedId && o.alive);
+            if (m) { best = m; bd = Math.hypot(m.x - f.x, m.y - f.y); }
           }
           f.target = best;
           if (best) {

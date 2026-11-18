@@ -11,6 +11,21 @@
     const f = run.fight;
     if (!f || run.screen !== 'play' || f.over) return;
     const p = f.player;
+    // hunt like a handler: marking is a situational tool, not a habit — call the
+    // beast off the APEX onto its summoned pups, or finish a wounded beast that
+    // is already close; never order a charge across the pit under fire
+    if (!f.markedId && f.time - f.markT > 1) {
+      const wild = f.wildAlive();
+      let target = null;
+      const pups = wild.filter((w) => !w.isBoss && w.maxHp <= 80);
+      if (pups.length && wild.some((w) => w.isBoss)) target = pups.sort((a, b) => a.hp - b.hp)[0];
+      else {
+        const wounded = wild.filter((w) => w.hp < w.maxHp * 0.35 && Math.hypot(w.x - p.x, w.y - p.y) < 330)
+          .sort((a, b) => a.hp - b.hp)[0];
+        if (wounded) target = wounded;
+      }
+      if (target) f.mark(target);
+    }
     if (p.hp < p.maxHp * 0.35 && f.prodCds.treat <= 0 && run.applause >= 40) Sim.prod(run, 'treat');
     else if (f.wildAlive().length >= 2 && f.prodCds.shock <= 0 && run.applause >= 30) Sim.prod(run, 'shock');
     else if (f.wildAlive().length >= 2 && f.prodCds.rage <= 0 && run.applause >= 35 && p.hasteT <= 0) Sim.prod(run, 'rage');

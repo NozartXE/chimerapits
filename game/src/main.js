@@ -77,6 +77,7 @@
       if (k === '1') Sim.prod(view.run, 'shock');
       else if (k === '2') Sim.prod(view.run, 'treat');
       else if (k === '3') Sim.prod(view.run, 'rage');
+      else if (k === 'q') { if (Sim.markStrongest(view.run)) Audio.sfx('prod'); }
       else if (k === 'z') view.run.stanceIdx = (view.run.stanceIdx + 2) % 3;
       else if (k === 'c') view.run.stanceIdx = (view.run.stanceIdx + 1) % 3;
       else if (k === 'p') view.paused = !view.paused;
@@ -91,7 +92,12 @@
     }
   }
 
-  globalThis.CP_Input.attach(canvas, view, { onButton, onKey });
+  function onClick(p) {
+    if (!view.run || view.run.screen !== 'play' || view.frozen || view.paused) return;
+    if (Sim.markAt(view.run, p.x, p.y)) Audio.sfx('prod');
+  }
+
+  globalThis.CP_Input.attach(canvas, view, { onButton, onKey, onClick });
 
   // ---- frame construction ------------------------------------------------------
   function drawFight(ctx, fight, fx) {
@@ -103,6 +109,20 @@
       else globalThis.CP_WildView.drawWild(ctx, f.kind, f, (f.kind.size || 1) * 0.98);
     }
     globalThis.CP_Hud.drawBars(ctx, fight);
+    // the mark: coral corner brackets on the beast the player has ordered hunted
+    if (fight.markedId) {
+      const m = fight.fighters.find((f) => f.id === fight.markedId && f.alive);
+      if (m) {
+        const r = m.radius + 16, cx = m.x, cy = m.y - 14, L = 15;
+        ctx.strokeStyle = '#E4572E'; ctx.lineWidth = 4; ctx.lineCap = 'round';
+        for (const [sx, sy] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) {
+          ctx.beginPath();
+          ctx.moveTo(cx + sx * r - sx * L, cy + sy * r); ctx.lineTo(cx + sx * r, cy + sy * r); ctx.lineTo(cx + sx * r, cy + sy * r - sy * L);
+          ctx.stroke();
+        }
+        globalThis.CP_Fit.draw(ctx, 'MARKED', cx, cy - r - 12, 14.5, '#E4572E', 'center', true);
+      }
+    }
     globalThis.CP_Fx.drawFloaters(ctx, fx);
   }
 

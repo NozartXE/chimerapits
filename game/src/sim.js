@@ -106,6 +106,25 @@
     return ok;
   }
 
+  // Marking: the player points at a wild beast (or presses Q for the strongest)
+  // and their beast hunts that one until it falls.
+  function markAt(run, x, y) {
+    if (!run.fight || run.screen !== 'play' || run.fight.over) return false;
+    let best = null, bd = 110;
+    for (const f of run.fight.fighters) {
+      if (!f.alive || f.team !== 'wild') continue;
+      const d = Math.hypot(f.x - x, f.y - y);
+      if (d < bd) { bd = d; best = f; }
+    }
+    return best ? run.fight.mark(best) : false;
+  }
+
+  function markStrongest(run) {
+    if (!run.fight || run.screen !== 'play' || run.fight.over) return false;
+    const wild = run.fight.wildAlive().sort((a, b) => b.hp - a.hp)[0];
+    return wild ? run.fight.mark(wild) : false;
+  }
+
   function finishRun(run, result) {
     run.result = result;
     run.screen = 'results';
@@ -140,5 +159,5 @@
     if (run.fight.over && run.overT > 0.9) { run.overT = 0; endBout(run); }
   }
 
-  globalThis.CP_Sim = { createRun, startBout, update, pickGraft, reroll, prod, currentBout, finishRun };
+  globalThis.CP_Sim = { createRun, startBout, update, pickGraft, reroll, prod, markAt, markStrongest, currentBout, finishRun };
 })();

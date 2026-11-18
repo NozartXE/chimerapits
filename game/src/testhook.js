@@ -63,7 +63,7 @@
       // principals separated across open sand, a spit in the air, the chain lit.
       // The restored frame is one real moment of one real fight, whole.
       const cloneFighter = (f) => ({
-        team: f.team, kind: f.kind, beast: f.beast, name: f.name, x: f.x, y: f.y, vx: f.vx, vy: f.vy,
+        id: f.id, team: f.team, kind: f.kind, beast: f.beast, name: f.name, x: f.x, y: f.y, vx: f.vx, vy: f.vy,
         facing: f.facing, hp: f.hp, maxHp: f.maxHp, radius: f.radius, alive: f.alive, isBoss: f.isBoss,
         phase: f.phase, statuses: f.statuses.map((s) => ({ kind: s.kind, stacks: s.stacks })),
         stun: f.stun, chargeT: f.chargeT, hitFlash: f.hitFlash, walkPhase: f.walkPhase, animT: f.animT,
@@ -94,10 +94,11 @@
           if (f.chain >= 2) score += 2; else if (f.chain === 1) score += 1;
           if (f.player.x > 240 && f.player.x < 760) score += 1;
           if (f.wildAlive().length >= 3) score += 1;
+          if (f.markedId && f.fighters.some((o) => o.id === f.markedId && o.alive)) score += 2;
           score += f.player.hp > f.player.maxHp * 0.3 ? 1 : -2;
           if (!best || score > best.score) {
             best = {
-              score, run, chain: f.chain, chainT: f.chainT,
+              score, run, chain: f.chain, chainT: f.chainT, markedId: f.markedId,
               scoreAt: run.score, applauseAt: run.applause,
               fighters: f.fighters.map(cloneFighter),
               projectiles: f.projectiles.map((p) => ({ x: p.x, y: p.y, vx: p.vx, vy: p.vy, kind: p.kind, team: p.team })),
@@ -111,6 +112,7 @@
       run.fight.fighters = best.fighters;
       run.fight.projectiles = best.projectiles;
       run.fight.chain = best.chain; run.fight.chainT = best.chainT;
+      run.fight.markedId = best.markedId;
       run.fight.player = best.fighters[0];
       run.fight.over = false;
       run.screen = 'play';

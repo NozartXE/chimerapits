@@ -13,7 +13,7 @@
   const Feats = globalThis.CP_Feats;
 
   const RULES = [
-    ['fight', 'Your beast fights the wild on its own — you prod, it bites'],
+    ['fight', 'Your beast fights the wild on its own — you MARK its prey, prod it, it bites'],
     ['graft', 'Win a bout, graft 1 of 3 new body parts onto it'],
     ['chain', 'Fast kills chain STYLE: the score multiplier climbs to x8'],
     ['prod', 'Spend APPLAUSE on prods: shock, treats, rageberry'],

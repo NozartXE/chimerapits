@@ -41,6 +41,9 @@
       } else if (e.t === 'prod') {
         pushFloater(fx, e.x, e.y - 84, e.text, '#7C4DBD', 4, true);
         spawnParts(fx, e.x, e.y - 40, 12, ['#7C4DBD', '#B79CED', '#FFF6E9'], 200, 0.6, 5);
+      } else if (e.t === 'mark') {
+        pushFloater(fx, e.x, e.y - 96, 'MARKED', '#E4572E', 4, true);
+        fx.rings.push({ x: e.x, y: e.y - 6, r: 8, max: 54, t: 0 });
       } else if (e.t === 'slam') {
         fx.rings.push({ x: e.x, y: e.y - 6, r: 12, max: e.r + 16, t: 0 });
         fx.shake = Math.min(9, fx.shake + 3.5);

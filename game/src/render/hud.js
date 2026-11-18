@@ -87,7 +87,7 @@
       Fit.draw(ctx, prod.name, x + 48, 758, 18, '#FFF6E9', 'left', true);
       Fit.draw(ctx, cd > 0 ? 'READY IN ' + Math.ceil(cd) + 's' : prod.cost + ' APPLAUSE', x + 48, 780, 14.5, afford || cd > 0 ? '#E8DCC2' : '#FF9D8A', 'left', true);
     });
-    Fit.draw(ctx, 'PRODS 1-2-3 · STANCE Z C · PAUSE P · MUTE M', 1258, 758, 15.5, '#E8DCC2', 'right', true);
+    Fit.draw(ctx, '1-2-3 PRODS · CLICK MARKS · Z C STANCE', 1258, 758, 15.5, '#E8DCC2', 'right', true);
     Fit.draw(ctx, 'STANCE: ' + C.STANCES[run.stanceIdx].name + ' · ' + C.STANCES[run.stanceIdx].text.toUpperCase(), 1258, 782, 13.5, '#B9CFC6', 'right', false);
   }
 
